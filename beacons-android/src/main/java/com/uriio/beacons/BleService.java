@@ -2,8 +2,6 @@ package com.uriio.beacons;
 
 import android.annotation.TargetApi;
 import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
@@ -13,8 +11,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
@@ -85,10 +81,10 @@ public class BleService extends Service implements AdvertisersManager.Listener {
 
     private AdvertisersManager mAdvertisersManager = null;
     private AlarmManager mAlarmManager = null;
-    private NotificationManager mNotificationManager = null;
+    //private NotificationManager mNotificationManager = null;
 
     /** App-provided (or default) notification provider. */
-    private NotificationProvider mNotificationProvider = null;
+    //private NotificationProvider mNotificationProvider = null;
 
     /** System clock time in milliseconds, when service was created */
     private long mPowerOnStartTime = 0;
@@ -136,9 +132,9 @@ public class BleService extends Service implements AdvertisersManager.Listener {
 
         super.onCreate();
 
-        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        //mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-        mNotificationProvider = getNotificationProvider();
+        //mNotificationProvider = getNotificationProvider();
         mPowerOnStartTime = SystemClock.elapsedRealtime();
         mEstimatedPDUCount = 0;
     }
@@ -195,9 +191,9 @@ public class BleService extends Service implements AdvertisersManager.Listener {
                 }
             }
 
-            if (null != mNotificationManager) {
-                mNotificationManager.cancel(mNotificationProvider.getNotificationId());
-            }
+            //if (null != mNotificationManager) {
+            //    mNotificationManager.cancel(mNotificationProvider.getNotificationId());
+            //}
 
             mStarted = false;
         }
@@ -206,7 +202,7 @@ public class BleService extends Service implements AdvertisersManager.Listener {
 
         super.onDestroy();
 
-        mNotificationManager = null;
+        //mNotificationManager = null;
         mAlarmManager = null;
     }
 
@@ -229,7 +225,7 @@ public class BleService extends Service implements AdvertisersManager.Listener {
 
             // when an advertiser will start, the service will start in foreground again
             // fixme - what if the service is killed while BT is off and we had RUNNING beacons?
-            stopForeground(true);
+            //stopForeground(true);
 
             broadcastBeaconEvent(EVENT_ADVERTISER_STOPPED, null);
         } else if (BluetoothAdapter.STATE_ON == state) {
@@ -380,7 +376,7 @@ public class BleService extends Service implements AdvertisersManager.Listener {
 
             broadcastBeaconEvent(EVENT_ADVERTISER_STARTED, beacon);
 
-            updateForegroundNotification(true);
+            //updateForegroundNotification(true);
         }
     }
 
@@ -395,7 +391,7 @@ public class BleService extends Service implements AdvertisersManager.Listener {
     }
     //endregion
 
-    private void updateForegroundNotification(boolean newAdvertiserStarted) {
+    /*private void updateForegroundNotification(boolean newAdvertiserStarted) {
         int totalRunning = 0;
         for (Beacon beacon : Beacons.getActive()) {
             if (beacon.getAdvertiseState() == Beacon.ADVERTISE_RUNNING) {
@@ -416,7 +412,7 @@ public class BleService extends Service implements AdvertisersManager.Listener {
         else {
             stopForeground(mNotificationProvider.onStoppedForeground());
         }
-    }
+    }*/
 
     private void stopBeacon(Beacon beacon, boolean remove) {
         Advertiser advertiser = beacon.getAdvertiser();
@@ -439,7 +435,7 @@ public class BleService extends Service implements AdvertisersManager.Listener {
         }
         broadcastBeaconEvent(EVENT_ADVERTISER_STOPPED, beacon);
 
-        updateForegroundNotification(false);
+        //updateForegroundNotification(false);
     }
 
     private void scheduleElapsedTimeAlarm(long triggerAtMillis, PendingIntent operation) {
@@ -476,7 +472,7 @@ public class BleService extends Service implements AdvertisersManager.Listener {
         return mEstimatedPDUCount;
     }
 
-    private NotificationProvider getNotificationProvider() {
+    /*private NotificationProvider getNotificationProvider() {
         ApplicationInfo appInfo;
         try {
             appInfo = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
@@ -500,5 +496,5 @@ public class BleService extends Service implements AdvertisersManager.Listener {
         } else {
             return new NotificationProvider(this);
         }
-    }
+    }*/
 }
