@@ -202,6 +202,10 @@ public class Beacons {
     }
 
     static void onBleServiceDestroyed() {
+        if (null == _instance) {
+            // not initialized at all
+            return;
+        }
         if (null != _instance.mActiveItems) {
             _instance.mActiveItems.clear();
         }
